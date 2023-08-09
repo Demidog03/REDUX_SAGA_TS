@@ -1,6 +1,6 @@
 import './App.css'
 
-import {FC, useEffect} from 'react';
+import {FC} from 'react';
 import {useDispatch} from "react-redux";
 import {fetchPostRequest} from "./redux/action-creators/post.ts";
 import {useTypedSelector} from "./hooks/useTypedSelector.ts";
@@ -27,8 +27,8 @@ const App: FC = () => {
   return (
       <div>
         <button onClick={() => {
-          dispatch(fetchPostRequest())
           dispatch(fetchTodoRequest())
+          dispatch(fetchPostRequest())
         }}>Fetch</button>
         {postsState.posts.map(post =>
             <div>

@@ -1,5 +1,5 @@
 import axios from "axios"
-import {put, call, takeLatest, all, takeEvery} from "redux-saga/effects"
+import {put, call, takeLatest, all} from "redux-saga/effects"
 import {fetchPostFailure, fetchPostSuccess} from "../action-creators/post.ts";
 import {PostActionTypes} from "../types/post.ts";
 import {IPost} from "../../models/IPost.ts";

@@ -12,6 +12,6 @@ export function* rootSaga(){
     // yield fork(todosSaga);
 
     //работают оба эффекта но параллельно а не поочередно
-    //call - blockable, all - если в массиве есть какой то bloackable эффект то он тоже будет blockable
+    //call - blocking, all - если в массиве есть какой то blocking эффект то он тоже будет blocking
     yield all([call(postsSaga), call(todosSaga)])
 }
