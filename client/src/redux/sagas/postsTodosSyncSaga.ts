@@ -8,7 +8,12 @@ import {ActionChannelType, IAction} from "../types/types.ts";
 
 
 export function* postsTodosSyncSaga(){
-    const requestChannel: ActionChannelType = yield actionChannel([PostActionTypes.FETCH_POST_REQUEST, TodoActionTypes.FETCH_TODO_REQUEST])
+    const requestChannel: ActionChannelType = yield actionChannel(
+        [
+            PostActionTypes.FETCH_POST_REQUEST,
+            TodoActionTypes.FETCH_TODO_REQUEST
+        ]
+    )
 
     while(true){
         const action: IAction =  yield take(requestChannel)

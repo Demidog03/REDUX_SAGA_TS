@@ -1,9 +1,10 @@
 import axios from "axios"
-import {put, call, actionChannel, take} from "redux-saga/effects"
+import {put, call, takeLeading} from "redux-saga/effects"
 import {fetchPostFailure, fetchPostSuccess} from "../action-creators/post.ts";
 import {PostActionTypes} from "../types/post.ts";
 import {IPost} from "../../models/IPost.ts";
-import {ActionChannelType, IAction} from "../types/types.ts";
+import {IAction} from "../types/types.ts";
+
 const getPosts = () => axios.get<IPost[]>("https://jsonplaceholder.typicode.com/posts")
 
 //fetchPosts worker
@@ -21,14 +22,14 @@ export function* fetchPostsSaga(action: IAction){
 
 //post watcher
 function* postsSaga(){
-    const requestChannel: ActionChannelType = yield actionChannel([PostActionTypes.FETCH_POST_REQUEST])
-    while(true){
-        const action: IAction =  yield take(requestChannel)
-        console.log(action)
-        yield call(fetchPostsSaga, action)
-    }
+    // const requestChannel = yield actionChannel([PostActionTypes.FETCH_POST_REQUEST])
+    // while(true){
+    //     const action =  yield take(requestChannel)
+    //     console.log(action)
+    //     yield call(fetchPostsSaga, action)
+    // }
 
-    // yield takeLatest(PostActionTypes.FETCH_POST_REQUEST, fetchPostsSaga);
+    yield takeLeading(PostActionTypes.FETCH_POST_REQUEST, fetchPostsSaga);
 }
 
 export default postsSaga;

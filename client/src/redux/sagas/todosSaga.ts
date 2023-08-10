@@ -1,9 +1,9 @@
 import axios from "axios";
 import {ITodo} from "../../models/ITodo.ts";
-import {actionChannel, call, put, take} from "redux-saga/effects";
+import {call, put, takeLeading} from "redux-saga/effects";
 import {fetchTodoFailure, fetchTodoSuccess} from "../action-creators/todo.ts";
 import {TodoActionTypes} from "../types/todo.ts";
-import {ActionChannelType, IAction} from "../types/types.ts";
+import {IAction} from "../types/types.ts";
 
 const getTodos = () => axios.get<ITodo[]>("https://jsonplaceholder.typicode.com/todos")
 
@@ -22,14 +22,14 @@ export function* fetchTodosSaga(action: IAction){
 
 //watcher
 function* todosSaga(){
-    const requestChannel: ActionChannelType = yield actionChannel(TodoActionTypes.FETCH_TODO_REQUEST)
-    while(true){
-        const action: IAction = yield take(requestChannel)
-        yield call(fetchTodosSaga, action)
-    }
+    // const requestChannel: ActionChannelType = yield actionChannel(TodoActionTypes.FETCH_TODO_REQUEST)
+    // while(true){
+    //     const action: IAction = yield take(requestChannel)
+    //     yield call(fetchTodosSaga, action)
+    // }
 
 
-    // yield takeLatest(TodoActionTypes.FETCH_TODO_REQUEST, fetchTodosSaga)
+    yield takeLeading(TodoActionTypes.FETCH_TODO_REQUEST, fetchTodosSaga)
 }
 
 export default todosSaga
