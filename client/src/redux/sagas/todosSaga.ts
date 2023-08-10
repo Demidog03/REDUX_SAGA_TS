@@ -1,13 +1,15 @@
 import axios from "axios";
 import {ITodo} from "../../models/ITodo.ts";
-import {all, call, put, takeLatest} from "redux-saga/effects";
+import {actionChannel, call, put, take} from "redux-saga/effects";
 import {fetchTodoFailure, fetchTodoSuccess} from "../action-creators/todo.ts";
 import {TodoActionTypes} from "../types/todo.ts";
+import {ActionChannelType, IAction} from "../types/types.ts";
 
 const getTodos = () => axios.get<ITodo[]>("https://jsonplaceholder.typicode.com/todos")
 
 //fetchTodos worker
-function* fetchTodosSaga(){
+export function* fetchTodosSaga(action: IAction){
+    console.log(action)
     try{
         const {data} = yield call(getTodos)
         yield put(fetchTodoSuccess({todos: data}))
@@ -20,7 +22,14 @@ function* fetchTodosSaga(){
 
 //watcher
 function* todosSaga(){
-    yield all([takeLatest(TodoActionTypes.FETCH_TODO_REQUEST, fetchTodosSaga)])
+    const requestChannel: ActionChannelType = yield actionChannel(TodoActionTypes.FETCH_TODO_REQUEST)
+    while(true){
+        const action: IAction = yield take(requestChannel)
+        yield call(fetchTodosSaga, action)
+    }
+
+
+    // yield takeLatest(TodoActionTypes.FETCH_TODO_REQUEST, fetchTodosSaga)
 }
 
 export default todosSaga
